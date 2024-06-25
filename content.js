@@ -77,9 +77,12 @@ function generateBranchName() {
   const branchName = `${nickname}/${type}/${issueNumber}-${shortDescription}`;
   let msg = `Generated Branch Name: ${branchName}`;
   if(copyToClipboard(branchName)) {
-    msg += " (Copied to clipboard)";
+    msg += "\n(Copied to clipboard)";
   }
-  console.log(msg);
+
+  // Let's make this message pretty...
+  // it should look like an old console - black background, green text and some padding
+  console.log(`%c${msg}`, 'background: black; color: green; padding: 10px;font-size: 16px;');
 }
 
 // Run the function to generate the branch name
