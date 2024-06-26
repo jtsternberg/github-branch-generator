@@ -2,6 +2,8 @@
 
 A simple Chrome extension that generates a Git branch name based on the current GitHub issue page and copies it to the clipboard. The branch name is generated following a specific format using your nickname, issue type, issue number, and a slugified version of the issue title.
 
+This extension was created with the help of ChatGPT (specifically ChatGPT 4o using the MacOs version of ChatGPT). Checkout [ChatGPT-Prompt.md](ChatGPT-Prompt.md) which documents the prompts used to generate the extension, as a learning resource for developers.
+
 ## Features
 
 - Generates a branch name in the format: `<nickname>/<type>/<issue-number>-<short-description>`

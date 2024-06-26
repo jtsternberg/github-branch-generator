@@ -1,5 +1,5 @@
 # What is this?
-This extension was documented with the help of ChatGPT (specifically ChatGPT 4o using the MacOs version of ChatGPT). This file is to document the prompts used to generate the extension, as a learning resource for developers.
+This extension was created with the help of ChatGPT (specifically ChatGPT 4o using the MacOs version of ChatGPT). This file is to document the prompts used to generate the extension, as a learning resource for developers.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
