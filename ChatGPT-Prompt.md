@@ -32,7 +32,7 @@ This extension was created with the help of ChatGPT (specifically ChatGPT 4o usi
 
 ![issue-screenshot](https://github.com/jtsternberg/github-branch-generator/assets/1098900/0b0d634c-8aba-4e98-a6d3-42ccf21ecd76)
 
-This is a screenshot of a GitHub issue page. I want to create a browser JS script/function to generate a feature/bug git branch name, using the info on the issue page, and using ourbranch-naming wiki instructions below.
+This is a screenshot of a GitHub issue page. I want to create a browser JS script/function to generate a feature/bug git branch name, using the info on the issue page, and using our branch-naming wiki instructions below.
 
 In the wiki below, it mentions:
 
