@@ -40,13 +40,14 @@ In the wiki below, it mentions:
    * If the nickname is not present in local storage, the tool should prompt me for it.
    * If the nickname is present in local storage, the tool should use it.
 * `<type>`: Will map from the labels attached to the issue to one of the following:
-      * bug
-      * feature
-      * hotfix
-      * change
-      * chore
-      * wip
-   * If no labels is present, or labels do not match any of the above, the type should be `change`.
+
+   * bug
+   * feature
+   * hotfix
+   * change
+   * chore
+   * wip
+   * _If no labels is present, or labels do not match any of the above, the type should be `change`._
 * `<issue-number>`: This can be pulled from the url.
 * `<short-description>`: The JS should just take the issue title and "slugify" it. If you don't know what I mean by that, please pause before proceeding and get clarification.
 
