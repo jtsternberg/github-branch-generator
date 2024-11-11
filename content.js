@@ -64,8 +64,8 @@ function generateBranchName() {
   const issueNumber = window.location.pathname.split('/').pop();
 
   // Get the issue title and labels
-  const issueTitle = document.querySelector('.js-issue-title').textContent.trim();
-  const labels = Array.from(document.querySelectorAll('.js-issue-labels [data-name')).map(label => label.dataset.name);
+  const issueTitle = document.querySelector('[data-testid="issue-title"]').textContent.trim();
+  const labels = Array.from(document.querySelectorAll('[data-testid="issue-labels"] [data-name')).map(label => label.dataset.name);
 
   // Determine the type from the labels
   const type = getTypeFromLabels(labels);
