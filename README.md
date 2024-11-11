@@ -6,8 +6,10 @@ This extension was created with the help of ChatGPT (specifically ChatGPT 4o usi
 
 ## Features
 
-- Generates a branch name in the format: `<nickname>/<type>/<issue-number>-<short-description>`
+- Button which generates a branch name in the format: `<nickname>/<type>/<issue-number>-<short-description>`
+    - Works on the current GitHub issue page
 - Automatically copies the generated branch name to the clipboard
+    - When first running, asks for your nickname which is saved to local storage.
 - Single-click operation by clicking the extension icon
 
 ## Installation
