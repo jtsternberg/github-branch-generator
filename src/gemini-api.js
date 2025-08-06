@@ -1,6 +1,6 @@
 // Gemini API integration for generating concise branch descriptions
 
-async function generateConciseDescription(issueTitle, apiKey) {
+export async function generateConciseDescription(issueTitle, apiKey) {
 	const prompt = `Create a concise, descriptive git branch name suffix from this GitHub issue title.
 
 Rules:
@@ -17,6 +17,25 @@ Issue title: "${issueTitle}"
 Return only the branch name suffix, absolutely nothing else.`;
 
 	try {
+		// Send progress updates to popup during long waits
+		setTimeout(() => {
+			try {
+				chrome.runtime.sendMessage({
+					type: 'UPDATE_LOADING_MESSAGE',
+					message: 'Still working on it... AI is thinking 🤔'
+				});
+			} catch (e) { /* ignore if not in extension context */ }
+		}, 3000);
+
+		setTimeout(() => {
+			try {
+				chrome.runtime.sendMessage({
+					type: 'UPDATE_LOADING_MESSAGE',
+					message: 'Taking longer than usual, but still generating...'
+				});
+			} catch (e) { /* ignore if not in extension context */ }
+		}, 8000);
+
 		const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
 			method: 'POST',
 			headers: {
@@ -29,10 +48,11 @@ Return only the branch name suffix, absolutely nothing else.`;
 					}]
 				}],
 				generationConfig: {
-					temperature: 0.3,
-					topK: 20,
-					topP: 0.8,
-					maxOutputTokens: 50
+					temperature: 0.1, // Lower temperature for faster, more deterministic responses
+					topK: 10,         // Reduced for faster processing
+					topP: 0.5,        // Reduced for faster processing
+					maxOutputTokens: 30, // Reduced since we only need a short branch name
+					candidateCount: 1    // Only generate one candidate for speed
 				}
 			})
 		});

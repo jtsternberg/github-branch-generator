@@ -72,6 +72,9 @@ function copyToClipboard(text) {
 	return true;
 }
 
+// Import the Gemini API function
+import { generateConciseDescription } from './gemini-api.js';
+
 // Main function to generate the branch name
 async function generateBranchName() {
 	// Get the nickname
@@ -81,21 +84,52 @@ async function generateBranchName() {
 	// Get the issue number from the URL
 	const issueNumber = window.location.pathname.split('/').pop();
 
-	// Get the issue title and labels
-	const issueTitle = document.querySelector('[data-testid="issue-title"]').textContent.trim();
+	// Get the issue/PR title - try multiple selectors for different page types
+	let issueTitleElement = document.querySelector('[data-testid="issue-title"]') ||
+		document.querySelector('.js-issue-title') ||
+		document.querySelector('h1[data-testid="pr-title"]') ||
+		document.querySelector('.js-issue-title-container .js-issue-title') ||
+		document.querySelector('h1.gh-header-title .js-issue-title');
+
+	if (!issueTitleElement) {
+		alert('Could not find issue or PR title. Please make sure you\'re on a GitHub issue or pull request page.');
+		return null;
+	}
+
+	const issueTitle = issueTitleElement.textContent.trim();
+
+	// Determine if this is a PR or Issue, and set appropriate default type
+	const isPullRequest = window.location.pathname.includes('/pull/');
+	let defaultType = isPullRequest ? 'feature' : 'change';
 
 	let type;
-	// Get types from `/awesomemotive/lindris-site/issues?q=type:&quot;Bug&quot;`
+	// Try to get types from issue type containers
 	const types = Array.from(document.querySelectorAll('[data-testid="issue-type-container"] a')).map(type => type.textContent);
 	if (types.length) {
 		type = getTypeFromTypes(types);
 	} else {
+		// Try to get labels - use more flexible selectors
+		const labelSelectors = [
+			'[data-testid="issue-labels"] a[href*="/labels/"]',
+			'.sidebar-labels a[href*="/labels/"]',
+			'.labels a[href*="/labels/"]',
+			'[data-testid="issue-labels"] [href*="/labels/"]'
+		];
 
-		// Get labels from `https://github.com/awesomemotive/lindris-site/labels/component-onboarding`
-		const labels = Array.from(document.querySelectorAll('[data-testid="issue-labels"] [href^="https://github.com/awesomemotive/lindris-site/labels/"]')).map(label => label.href.split('/').pop());
+		let labels = [];
+		for (const selector of labelSelectors) {
+			const elements = document.querySelectorAll(selector);
+			if (elements.length > 0) {
+				labels = Array.from(elements).map(label => {
+					const href = label.href || label.getAttribute('href');
+					return href ? href.split('/').pop() : '';
+				}).filter(label => label);
+				break;
+			}
+		}
 
 		// Determine the type from the labels
-		type = getTypeFromLabels(labels) || 'change';
+		type = getTypeFromLabels(labels) || defaultType;
 	}
 
 	// Generate description - try AI first, fallback to slugify

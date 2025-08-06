@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 		if (message.type === 'BRANCH_NAME_GENERATED') {
 			showResult(message.branchName);
 			showStatus('Branch name generated and copied to clipboard!');
+		} else if (message.type === 'UPDATE_LOADING_MESSAGE') {
+			if (loading.style.display === 'flex') {
+				loadingText.textContent = message.message;
+			}
 		}
 	});
 	const apiKeyInput = document.getElementById('api-key');
@@ -92,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 			await chrome.scripting.executeScript({
 				target: { tabId: tab.id },
-				files: ['gemini-api.js', 'content.js']
+				files: ['dist/content-bundle.iife.js']
 			});
 
 			// The success message and result display will be handled by the message listener

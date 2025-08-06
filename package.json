@@ -1,0 +1,16 @@
+{
+  "name": "github-branch-generator",
+  "version": "1.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "npm run clean && npm run build:content && npm run build:other",
+    "build:content": "vite build -c vite.content.config.js",
+    "build:other": "cp src/background.js src/popup.js dist/",
+    "dev": "npm run build && vite build --watch -c vite.content.config.js",
+    "clean": "rm -rf dist && mkdir -p dist"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "description": "Chrome extension for generating Git branch names from GitHub issues"
+}

@@ -1,7 +1,7 @@
 chrome.action.onClicked.addListener((tab) => {
-  // Inject both the Gemini API and content scripts
+  // Inject the bundled content script
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    files: ['gemini-api.js', 'content.js']
+    files: ['dist/content-bundle.iife.js']
   });
 });
