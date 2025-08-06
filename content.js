@@ -40,7 +40,8 @@ function getTypeFromTypes(types) {
 			return labelMapping[label.toLowerCase()];
 		}
 	}
-	return '';
+
+	return types.shift().toLowerCase();
 }
 
 function getTypeFromLabels(labels) {
