@@ -73,7 +73,7 @@ function copyToClipboard(text) {
 }
 
 // Main function to generate the branch name
-function generateBranchName() {
+async function generateBranchName() {
 	// Get the nickname
 	const nickname = getNickname();
 	if (!nickname) return;
@@ -98,9 +98,26 @@ function generateBranchName() {
 		type = getTypeFromLabels(labels) || 'change';
 	}
 
+	// Generate description - try AI first, fallback to slugify
+	let shortDescription;
+	try {
+		// Get API key from Chrome storage
+		const result = await chrome.storage.sync.get(['geminiApiKey']);
+		const apiKey = result.geminiApiKey;
 
-	// Slugify the issue title
-	const shortDescription = slugify(issueTitle);
+		if (apiKey && typeof generateConciseDescription === 'function') {
+			// console.log('%cTrying AI description generation...', 'color: blue; font-style: italic;');
+			shortDescription = await generateConciseDescription(issueTitle, apiKey);
+		}
+	} catch (error) {
+		console.warn('AI description generation failed:', error);
+	}
+
+	// Fallback to original slugify method
+	if (!shortDescription) {
+		console.log('%cUsing fallback slugify method', 'color: orange; font-style: italic;');
+		shortDescription = slugify(issueTitle);
+	}
 
 	// Generate the branch name
 	const branchName = `${nickname}/${type}/${issueNumber}-${shortDescription}`;
@@ -112,6 +129,18 @@ function generateBranchName() {
 	// Let's make this message pretty...
 	// it should look like an old console - black background, green text and some padding
 	console.log(`%c${msg}`, 'background: black; color: green; padding: 10px;font-size: 16px;');
+
+	// Send the branch name back to the popup if running in popup context
+	try {
+		chrome.runtime.sendMessage({
+			type: 'BRANCH_NAME_GENERATED',
+			branchName: branchName
+		});
+	} catch (error) {
+		// Ignore if not in extension context
+	}
+
+	return branchName;
 }
 
 // Run the function to generate the branch name
