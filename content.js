@@ -89,17 +89,15 @@ function generateBranchName() {
 	const types = Array.from(document.querySelectorAll('[data-testid="issue-type-container"] a')).map(type => type.textContent);
 	if (types.length) {
 		type = getTypeFromTypes(types);
-	}
+	} else {
 
-	if (!type) {
 		// Get labels from `https://github.com/awesomemotive/lindris-site/labels/component-onboarding`
 		const labels = Array.from(document.querySelectorAll('[data-testid="issue-labels"] [href^="https://github.com/awesomemotive/lindris-site/labels/"]')).map(label => label.href.split('/').pop());
 
 		// Determine the type from the labels
-		type = getTypeFromLabels(labels);
+		type = getTypeFromLabels(labels) || 'change';
 	}
 
-	type = type || 'change';
 
 	// Slugify the issue title
 	const shortDescription = slugify(issueTitle);
