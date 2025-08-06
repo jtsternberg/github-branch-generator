@@ -31,7 +31,7 @@ This is a Chrome Manifest V3 extension built with Vite. File structure:
 
 **Key Files:**
 - **manifest.json**: Chrome extension configuration with permissions for `storage`, `activeTab`, `scripting`, and host permissions for Gemini API
-- **dist/background.js**: Service worker that injects the bundled content script when extension is triggered  
+- **dist/background.js**: Service worker that injects the bundled content script when extension is triggered
 - **src/content.js**: Main functionality that extracts issue/PR data and generates branch names
 - **src/gemini-api.js**: Gemini API integration for generating concise branch descriptions
 - **popup.html/src/popup.js**: Configuration interface with auto-generation and API key management
@@ -41,7 +41,7 @@ This is a Chrome Manifest V3 extension built with Vite. File structure:
 ### Branch Name Generation Logic (src/content.js)
 - **Multi-page Support**: Works on both GitHub Issues (`/issues/123`) and Pull Requests (`/pull/456`)
 - **Robust Selectors**: Multiple fallback selectors for title extraction to handle different GitHub page layouts
-- **Smart Type Detection**: 
+- **Smart Type Detection**:
   - PRs default to `feature`, Issues default to `change`
   - Extracts from issue type containers or labels
   - Maps to: bug, feature, hotfix, change, chore, wip
@@ -109,7 +109,7 @@ Always check for code duplication when adding new features:
 
 ### Basic Functionality
 1. **GitHub Issues**: Navigate to any GitHub issue page (`/issues/123`)
-2. **GitHub PRs**: Navigate to any GitHub pull request page (`/pull/456`) 
+2. **GitHub PRs**: Navigate to any GitHub pull request page (`/pull/456`)
 3. **Auto-generation**: Click extension icon → should auto-generate immediately
 4. **Multi-tab**: Test in multiple tabs simultaneously (should work independently)
 
@@ -134,7 +134,7 @@ The extension uses multiple fallback selectors to be resilient to GitHub UI chan
 
 ### Title Selectors (in order of preference)
 - `[data-testid="issue-title"]` - Modern GitHub issues
-- `.js-issue-title` - Legacy selector  
+- `.js-issue-title` - Legacy selector
 - `h1[data-testid="pr-title"]` - Pull request titles
 - `.js-issue-title-container .js-issue-title` - Alternative layout
 - `h1.gh-header-title .js-issue-title` - Header variations
@@ -152,7 +152,7 @@ The extension uses multiple fallback selectors to be resilient to GitHub UI chan
 ### Gemini API Configuration
 - **Model**: `gemini-1.5-flash-latest` (fastest available)
 - **Endpoint**: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent`
-- **Parameters**: 
+- **Parameters**:
   - Temperature: 0.1 (very deterministic)
   - MaxTokens: 30 (concise responses)
   - TopK/TopP: Reduced for faster processing
@@ -161,5 +161,4 @@ The extension uses multiple fallback selectors to be resilient to GitHub UI chan
 
 ## Git Best Practices
 
-- Never use `git add .` or `git add -A` - hand-pick files for staging.
-```
+- Never use `git add .` or `git add -A` - hand-pick files for staging, e.g. `git add file1.js file2.js`
