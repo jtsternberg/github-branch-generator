@@ -20,6 +20,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 	const branchNameDisplay = document.getElementById('branch-name');
 	const copyButton = document.getElementById('copy-branch');
 
+	// Generate branch name - shared logic for auto-generation and manual regeneration
+	async function generateBranchName() {
+		try {
+			const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+			if (!tab.url.includes('github.com')) {
+				showStatus('Please navigate to a GitHub issue or pull request page', true);
+				return;
+			}
+
+			// Check if we have an API key to show appropriate loading message
+			const result = await chrome.storage.sync.get(['geminiApiKey']);
+			const hasApiKey = result.geminiApiKey && result.geminiApiKey.trim();
+
+			if (hasApiKey) {
+				showLoading('Generating branch name with AI...');
+			} else {
+				showLoading('Generating branch name...');
+			}
+
+			await chrome.scripting.executeScript({
+				target: { tabId: tab.id },
+				files: ['dist/content-bundle.iife.js']
+			});
+
+			// The success message and result display will be handled by the message listener
+		} catch (error) {
+			showStatus('Error generating branch name', true);
+			console.error('Error executing script:', error);
+		}
+	}
+
+	// Start auto-generation immediately when popup opens
+	generateBranchName();
+
 	// Load existing settings
 	const result = await chrome.storage.sync.get(['geminiApiKey']);
 	if (result.geminiApiKey) {
@@ -74,37 +109,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	});
 
-	// Generate branch name
-	generateButton.addEventListener('click', async () => {
-		try {
-			const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-			if (!tab.url.includes('github.com')) {
-				showStatus('Please navigate to a GitHub issue page', true);
-				return;
-			}
-
-			// Check if we have an API key to show appropriate loading message
-			const result = await chrome.storage.sync.get(['geminiApiKey']);
-			const hasApiKey = result.geminiApiKey && result.geminiApiKey.trim();
-
-			if (hasApiKey) {
-				showLoading('Generating branch name with AI...');
-			} else {
-				showLoading('Generating branch name...');
-			}
-
-			await chrome.scripting.executeScript({
-				target: { tabId: tab.id },
-				files: ['dist/content-bundle.iife.js']
-			});
-
-			// The success message and result display will be handled by the message listener
-		} catch (error) {
-			showStatus('Error generating branch name', true);
-			console.error('Error executing script:', error);
-		}
-	});
+	// Regenerate button - reuse the same logic
+	generateButton.addEventListener('click', generateBranchName);
 
 	// Copy button functionality
 	copyButton.addEventListener('click', async () => {
